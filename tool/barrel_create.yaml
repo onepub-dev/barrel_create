@@ -1,0 +1,6 @@
+quite: true
+threshold: 3
+recursive: true
+directories:
+  - /home/bsutton/git/pigation2/pig_common
+  - /home/bsutton/git/pigation2/pig_server

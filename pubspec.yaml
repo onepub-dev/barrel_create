@@ -1,0 +1,22 @@
+name: barrel_create
+description: CLI tool that creates a barrel file for a passed directory
+version: 1.0.0
+repository: https://github.com/bsutton/barrel_create
+
+environment:
+  sdk: ^3.6.0
+
+# Add regular dependencies here.
+dependencies:
+  args: ^2.6.0
+  collection: ^1.19.1
+  dcli: ^6.1.2
+  path: ^1.9.1
+  settings_yaml: ^8.2.0
+
+dev_dependencies:
+  lint_hard: ^5.0.0
+  test: ^1.24.0
+
+executables:
+  barrel_create:
