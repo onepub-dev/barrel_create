@@ -18,7 +18,7 @@ void main(List<String> arguments) {
     ..addFlag('recursive', abbr: 'r', negatable: false, help: '''
 recursively creates barrel files for each passed directory''')
     ..addFlag('quite',
-        abbr: 'q', negatable: false, help: "Don't report skipped directories")
+        abbr: 'q', defaultsTo: true, help: "Don't report skipped directories")
     ..addOption('threshold',
         abbr: 't',
         defaultsTo: '3',
