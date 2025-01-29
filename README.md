@@ -62,6 +62,13 @@ cd my/project/root
 barrel_create 
 ```
 
+Barrel Create also has a short cut `brl`
+```bash
+cd my/project/root
+brl
+```
+
+
 ### create a barrel file for a specific directory
 ```bash
 cd my/project/root

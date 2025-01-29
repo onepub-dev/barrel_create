@@ -1,6 +1,6 @@
 name: barrel_create
 description: CLI tool that creates a barrel file for a passed directory
-version: 1.0.0
+version: 1.0.1
 repository: https://github.com/onepub-dev/barrel_create
 
 environment:
@@ -20,3 +20,4 @@ dev_dependencies:
 
 executables:
   barrel_create:
+  brl: barrel_create
