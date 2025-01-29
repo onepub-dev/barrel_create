@@ -72,25 +72,25 @@ brl
 ### create a barrel file for a specific directory
 ```bash
 cd my/project/root
-barrel_create lib/src/dao
+brl lib/src/dao
 ```
 
 ### create a barrel file for multiple directory
 ```bash
 cd my/project/root
-barrel_create lib/src/dao lib/src/entity
+brl lib/src/dao lib/src/entity
 ```
 
 ### create a barrel file for any directory in my project with at least 10 dart libraries
 ```bash
 cd my/project/root
-barrel_create -t 10 
+brl -t 10 
 ```
 ### create a barrel file for all directory under lib/src/ui with at
 least 4 libraries.
 ```bash
 cd my/project/root
-barrel_create -t 4 -r lib/src/ui
+brl -t 4 -r lib/src/ui
 ```
 
 # Advanced options
@@ -101,7 +101,7 @@ You can pass a list of directories to barrel_create and it will
 process each directory in turn:
 
 ```
-barrel_create pigation2/pig_common/  pigation2/pig_server
+brl pigation2/pig_common/  pigation2/pig_server
 ```
 
 ## recursion
@@ -110,7 +110,7 @@ By passing in the --recursion (-r) flag, barrel create will recursively process
 all directories under each of the passed directories.
 
 ```
-barrel_create -r pigation2/pig_common/  pigation2/pig_server
+brl -r pigation2/pig_common/  pigation2/pig_server
 ```
 
 ## threshold
@@ -123,7 +123,7 @@ file will be created even if no dart files exist in the directory (i.e. threshol
 You can change the threshold by passing the --threshold (-t) flag
 
 ```
-barrel_create -t 10 pigation2/pig_common/  pigation2/pig_server
+brl -t 10 pigation2/pig_common/  pigation2/pig_server
 ```
 
 ## quite
@@ -186,5 +186,5 @@ To use the settings file:
 
 ```bash
 cd myproject
-barrel_create
+brl
 ```
