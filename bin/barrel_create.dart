@@ -17,7 +17,7 @@ void main(List<String> arguments) {
   final parser = ArgParser()
     ..addFlag('recursive', abbr: 'r', negatable: false, help: '''
 recursively creates barrel files for each passed directory''')
-    ..addFlag('quite',
+    ..addFlag('quiet',
         abbr: 'q', defaultsTo: true, help: "Don't report skipped directories")
     ..addOption('threshold',
         abbr: 't',
@@ -35,7 +35,7 @@ recursively creates barrel files for each passed directory''')
   }
 
   var recursive = parsed['recursive'] as bool;
-  var quite = parsed['quite'] as bool;
+  var quiet = parsed['quiet'] as bool;
   var threshold = int.tryParse(parsed['threshold'] as String);
 
   final directories = <String>[];
@@ -57,7 +57,7 @@ You must either pass a directory or run barrel_create from within a Dart project
     if (exists(pathToSettings)) {
       usingSettings = true;
       final settings = SettingsYaml.load(pathToSettings: pathToSettings);
-      quite = settings.asBool('quite', defaultValue: false);
+      quiet = settings.asBool('quiet', defaultValue: false);
       recursive = settings.asBool('recursive', defaultValue: false);
       threshold = settings.asInt('threshold', defaultValue: 3);
 
@@ -114,7 +114,7 @@ You must either pass a directory or run barrel_create from within a Dart project
     _createBarrel(directory,
         recursive: recursive,
         threshold: threshold!,
-        quite: quite,
+        quiet: quiet,
         reportEmpty: true,
         projectRoot: dartProject.pathToProjectRoot);
   }
@@ -125,7 +125,7 @@ void _createBarrel(String directory,
     required int threshold,
     required bool reportEmpty,
     required String projectRoot,
-    required bool quite}) {
+    required bool quiet}) {
   final directoryName = basename(directory);
   final barrelFileName = '$directoryName.g.dart';
   final barrelFilePath = join(directory, barrelFileName);
@@ -140,7 +140,7 @@ void _createBarrel(String directory,
       _createBarrel(subdir,
           recursive: false,
           threshold: threshold,
-          quite: quite,
+          quiet: quiet,
           reportEmpty: false,
           projectRoot: projectRoot);
     }
@@ -156,7 +156,7 @@ void _createBarrel(String directory,
             .toList();
 
     if (dartFiles.length < threshold) {
-      if (!quite) {
+      if (!quiet) {
         print('Skipping: $relativeDirName as < $threshold files');
       }
       return;
@@ -165,7 +165,7 @@ void _createBarrel(String directory,
     if (!dartFiles.contains(barrelFilePath) &&
         dartFiles.firstWhereOrNull((file) => file.endsWith('.g.dart')) !=
             null) {
-      if (!quite) {
+      if (!quiet) {
         print('Skipping: $relativeDirName as it contains generated files');
       }
       return;

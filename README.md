@@ -46,7 +46,7 @@ To create a barrel file:
 
 ```bash
 dart pub global activate barrel_create
-barrel_create [-t=n] [--r] <path to directory> [path to directory]...
+barrel_create [--threshold=n] [--recursion] [--[no-]quiet] <path to directory> [path to directory]...
 ```
 
 ## Examples
@@ -126,9 +126,9 @@ You can change the threshold by passing the --threshold (-t) flag
 brl -t 10 pigation2/pig_common/  pigation2/pig_server
 ```
 
-## quite
+## quiet
 When recursing barrel_create reports any direct that it inspected but didn't have enough .dart files to trigger the creation of a Barrel file. You can suppress this
-warning by passing the `--quite (-q)` flag.
+warning by passing the `--quiet (-q)` flag.
 
 ## generated directories
 If barrel_create detects a directory that has generated files in it (other than its own file)
@@ -174,7 +174,7 @@ The settings file is placed in:
 ## Example
 
 ```yaml
-quite: true
+quiet: true
 threshold: 10
 recursive: true
 directories:
