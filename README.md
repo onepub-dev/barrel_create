@@ -127,11 +127,13 @@ brl -t 10 pigation2/pig_common/  pigation2/pig_server
 ```
 
 ## quiet
-When recursing barrel_create reports any direct that it inspected but didn't have enough .dart files to trigger the creation of a Barrel file. You can suppress this
-warning by passing the `--quiet (-q)` flag.
+When recursing barrel_create reports any directory that it inspected but didn't have enough .dart files to trigger the creation of a Barrel file. 
+
+By default these messages are suppressed. You can enable the messages by passing `--no-quiet (-no-q)` flag.
+
 
 ## generated directories
-If barrel_create detects a directory that has generated files in it (other than its own file)
+If barrel_create detects a directory that has generated files (*.g.dart) in it (other than its own file)
 then it will not generate a barrel file in that directory.
 
 > Most generated directories already have a barrel file created
@@ -162,11 +164,11 @@ file.
 
 
 # Settings File
-To save you from having to type the same args to barrel_create each time you 
+To save you from having to type the same args for barrel_create each time you 
 run it, you can instead create a settings file in your dart projects
 tool directory.
 
-Whenever you run barrel_create without any arguments and a settings file exist,then the settings will be used.
+Whenever you run barrel_create without any arguments and a settings file exist, then the settings will be used.
 
 The settings file is placed in:
 `<my project>/tool/barrel_create.yaml`
