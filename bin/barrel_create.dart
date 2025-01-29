@@ -79,9 +79,9 @@ You must either pass a directory or run barrel_create from within a Dart project
     }
 
     /// If we are not recursive the user intends to create a barrel file
-    /// so we remove the threshold.
+    /// so we set the threshold to 2.
     if (!recursive) {
-      threshold = 0;
+      threshold = 2;
     }
 
     recursive = true;

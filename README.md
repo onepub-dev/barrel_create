@@ -16,7 +16,7 @@ dao_customer.dart
 dao_contact.dart
 ```
 
-Create Barrel would create a barrel file in that directory (called dao.g.dart):
+Create Barrel would create a barrel file in that directory called dao.g.dart:
 
 `dao.g.dart`
 ```dart
@@ -86,8 +86,7 @@ brl lib/src/dao lib/src/entity
 cd my/project/root
 brl -t 10 
 ```
-### create a barrel file for all directory under lib/src/ui with at
-least 4 libraries.
+### create a barrel file for all directory under lib/src/ui with at least 4 libraries.
 ```bash
 cd my/project/root
 brl -t 4 -r lib/src/ui
@@ -107,7 +106,7 @@ brl pigation2/pig_common/  pigation2/pig_server
 ## recursion
 
 By passing in the --recursion (-r) flag, barrel create will recursively process
-all directories under each of the passed directories.
+all sub-directories under each of the passed directories.
 
 ```
 brl -r pigation2/pig_common/  pigation2/pig_server
@@ -118,7 +117,9 @@ By default, when recursing, barrel_create will only create a barrel file for dir
 which contain at least three dart libraries.
 
 If you pass a directory, but don't specify the --recursive option, then a barrel
-file will be created even if no dart files exist in the directory (i.e. threshold is ignored).
+file will be created even if only a two dart files exist in the directory (i.e. threshold is set to 2).
+
+> If there is only a single library in a directory it makes no sense to have a barrel file.
 
 You can change the threshold by passing the --threshold (-t) flag
 
