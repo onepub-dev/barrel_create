@@ -10,7 +10,7 @@ import 'common.dart';
 void main() {
   test('threshold 3 - three files', () async {
     await withinTestArea((testArea) {
-      final pathToExe = absolutePathToExe;
+      // final pathToExe = absolutePathToExe;
       // final lines =
       //     runBarrelCreate(pathToExe, '-t 3 --no-quiet -d $pathToFiles3');
 
@@ -53,7 +53,7 @@ export 'file_3.dart';
 
   test('threshold 3 - two files', () async {
     await withinTestArea((testArea) {
-      final pathToExe = absolutePathToExe;
+      // final pathToExe = absolutePathToExe;
       // final lines = runBarrelCreate(pathToExe, '-t 3 $pathToFiles2');
 
       final lines = <String>[];
@@ -76,7 +76,7 @@ export 'file_3.dart';
 
   test('threshold 3- zero files', () async {
     await withinTestArea((testArea) {
-      final pathToExe = absolutePathToExe;
+      // final pathToExe = absolutePathToExe;
 
       // final lines = runBarrelCreate(pathToExe, '-t 3 $pathToFiles0');
 

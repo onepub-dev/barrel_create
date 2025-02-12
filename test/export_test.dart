@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 import 'common.dart';
 
-void main() {
+void main() async {
   test('barrel file does not export itself on regeneration', () async {
     await withinTestArea((testArea) {
       // Create a directory under the lib folder.

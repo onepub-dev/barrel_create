@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import 'common.dart';
 
-void main() {
+void main() async {
   test('skip non lib directories', () async {
     await withinTestArea((testArea) {
       final pathToExe = absolutePathToExe;
@@ -21,8 +21,6 @@ void main() {
 
       print(lines);
       var line = 0;
-
-      print('lines');
 
       expect(lines.length, equals(11));
       expect(Ansi.strip(lines[line++]), equals('Excluded:   .'));
