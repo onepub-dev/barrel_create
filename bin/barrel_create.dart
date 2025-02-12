@@ -3,7 +3,7 @@
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:collection/collection.dart';
+import 'package:barrel_create/src/process.dart';
 import 'package:dcli/dcli.dart';
 import 'package:path/path.dart';
 import 'package:settings_yaml/settings_yaml.dart';
@@ -19,6 +19,7 @@ void main(List<String> arguments) {
 recursively creates barrel files for each passed directory''')
     ..addFlag('quiet',
         abbr: 'q', defaultsTo: true, help: "Don't report skipped directories")
+    ..addFlag('debug', abbr: 'd', hide: true, help: 'Outputs debug messages')
     ..addOption('threshold',
         abbr: 't',
         defaultsTo: '3',
@@ -34,32 +35,28 @@ recursively creates barrel files for each passed directory''')
     exit(1);
   }
 
+  final directories = <String>[];
   var recursive = parsed['recursive'] as bool;
   var quiet = parsed['quiet'] as bool;
+  final debug = parsed['debug'] as bool;
   var threshold = int.tryParse(parsed['threshold'] as String);
 
-  final directories = <String>[];
-
-  final dartProject = DartProject.findProject('.');
+  final dartProject = _pathToProject(parser);
 
   var usingSettings = false;
 
+  final pathToSettings =
+      join(dartProject.pathToToolDir, barrelSettingsFilename);
+
   /// No args so look for settings.
   if (arguments.isEmpty) {
-    if (dartProject == null) {
-      print(red('''
-You must either pass a directory or run barrel_create from within a Dart project'''));
-      usage(parser);
-      exit(1);
-    }
-    final pathToSettings =
-        join(dartProject.pathToToolDir, barrelSettingsFilename);
     if (exists(pathToSettings)) {
       usingSettings = true;
       final settings = SettingsYaml.load(pathToSettings: pathToSettings);
-      quiet = settings.asBool('quiet', defaultValue: false);
-      recursive = settings.asBool('recursive', defaultValue: false);
-      threshold = settings.asInt('threshold', defaultValue: 3);
+
+      quiet = settings.asBool('quiet', defaultValue: quiet);
+      recursive = settings.asBool('recursive', defaultValue: recursive);
+      threshold ??= settings.asInt('threshold', defaultValue: threshold ?? 3);
 
       directories.addAll(settings.asStringList('directories'));
       print(blue('Processing directories found in $pathToSettings'));
@@ -67,11 +64,6 @@ You must either pass a directory or run barrel_create from within a Dart project
   }
 
   if (!usingSettings && parsed.rest.isEmpty) {
-    if (dartProject == null) {
-      print(red("The current directory isn't within a project"));
-      exit(1);
-    }
-
     if (threshold == null) {
       print(red('The threshold must be an +ve integer'));
       usage(parser);
@@ -80,7 +72,7 @@ You must either pass a directory or run barrel_create from within a Dart project
 
     /// If we are not recursive the user intends to create a barrel file
     /// so we set the threshold to 2.
-    if (!recursive) {
+    if (!recursive && parsed.rest.isNotEmpty) {
       threshold = 2;
     }
 
@@ -89,7 +81,7 @@ You must either pass a directory or run barrel_create from within a Dart project
   } else {
     for (final directory in parsed.rest) {
       if (!exists(directory)) {
-        print(red('The $directory does not exists'));
+        print(red('The directory ${truepath(directory)} does not exists'));
         exit(1);
       }
 
@@ -101,106 +93,40 @@ You must either pass a directory or run barrel_create from within a Dart project
     }
   }
 
+  if (debug) {
+    print('''
+recursive: $recursive
+quiet: $quiet
+debug: $debug
+threshold: $threshold
+directories: $directories
+projectRoot: ${dartProject.pathToProjectRoot}
+usingSettings: $usingSettings
+pathToSettings: $pathToSettings
+settings file exists: ${exists(pathToSettings)}
+''');
+  }
+
   if (directories.isEmpty) {
     print(red('No directories to be processed'));
   }
-  for (final directory in directories) {
-    final dartProject = DartProject.findProject(directory);
-    if (dartProject == null) {
-      print(red("The directory $directory isn't within a project"));
-      exit(1);
-    }
-    print(orange('Processing $directory'));
-    _createBarrel(directory,
-        recursive: recursive,
-        threshold: threshold!,
-        quiet: quiet,
-        reportEmpty: true,
-        projectRoot: dartProject.pathToProjectRoot);
-  }
+  processDirectories(
+      directories: directories,
+      threshold: threshold!,
+      quiet: quiet,
+      debug: debug,
+      reportEmpty: false,
+      projectRoot: dartProject.pathToProjectRoot,
+      progress: print);
 }
 
-void _createBarrel(String directory,
-    {required bool recursive,
-    required int threshold,
-    required bool reportEmpty,
-    required String projectRoot,
-    required bool quiet}) {
-  final directoryName = basename(directory);
-  final barrelFileName = '$directoryName.g.dart';
-  final barrelFilePath = join(directory, barrelFileName);
-
-  if (recursive) {
-    final subdirectories = find('*',
-            types: [Find.directory],
-            recursive: recursive,
-            workingDirectory: directory)
-        .toList();
-    for (final subdir in subdirectories) {
-      _createBarrel(subdir,
-          recursive: false,
-          threshold: threshold,
-          quiet: quiet,
-          reportEmpty: false,
-          projectRoot: projectRoot);
-    }
-  } else {
-    var relativeDirName = relative(directory, from: projectRoot);
-    if (relativeDirName == '.') {
-      relativeDirName = directory;
-    }
-
-    // Collect all Dart files except the barrel file itself
-    final dartFiles =
-        find('*.dart', recursive: recursive, workingDirectory: directory)
-            .toList();
-
-    if (dartFiles.length < threshold) {
-      if (!quiet) {
-        print('Skipping: $relativeDirName as < $threshold files');
-      }
-      return;
-    }
-
-    if (!dartFiles.contains(barrelFilePath) &&
-        dartFiles.firstWhereOrNull((file) => file.endsWith('.g.dart')) !=
-            null) {
-      if (!quiet) {
-        print('Skipping: $relativeDirName as it contains generated files');
-      }
-      return;
-    }
-
-    dartFiles.sort();
-
-    // Generate export statements
-    final exports = dartFiles.map((file) {
-      final fileName = basename(file);
-      return "export '$fileName';";
-    }).join('\n');
-
-    // Write the barrel file
-    barrelFilePath.write('''
-//
-// Generated file. Do not modify.
-// Created by `barrel_create`
-// barrel_create is sponsored by OnePub the dart private repository
-// https://onepub.dev
-//
-$exports''');
-    print(green('Created:  ${relative(barrelFilePath, from: projectRoot)}'));
+DartProject _pathToProject(ArgParser parser) {
+  final dartProject = DartProject.findProject('.');
+  if (dartProject == null) {
+    print(red('''
+  You must either pass a directory or run barrel_create from within a Dart project'''));
+    usage(parser);
+    exit(1);
   }
-}
-
-void usage(ArgParser parser) {
-  print('''
-
-${green('barrel_create creates a barrel file in each of the passed directories')}
-
-barrel_create [-t=n] [--r] <path to directory> [path to directory]...
-
-${parser.usage}
-
-Create a tool/barrel_create.yaml file under your Dart Project root to save re-typing the same arguments.
-''');
+  return dartProject;
 }

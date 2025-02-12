@@ -9,8 +9,7 @@
             "request": "launch",
             "type": "dart",
             "args": [
-                "/home/bsutton/git/pigation2/pig_common",
-                "/home/bsutton/git/pigation2/pig_server",
+                "/home/bsutton/git/hmb",
                 "-r",
                 "-t 10"
             ]

@@ -10,9 +10,10 @@ environment:
 dependencies:
   args: ^2.6.0
   collection: ^1.19.1
-  dcli: ^6.1.2
+  dcli: ^7.0.0
   path: ^1.9.1
   settings_yaml: ^8.2.0
+  strings: ^3.1.2
 
 dev_dependencies:
   lint_hard: ^5.0.0

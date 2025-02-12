@@ -55,7 +55,7 @@ To avoid having to retype the arguments you can create a [settings file](#settin
 project that controls where barrel_create creates barrel files.
 
 
-### recursively create barrel files for every directory that contains at least 3 Dart files.
+### recursively create barrel files for every directory under the `lib` directory that contains at least 3 Dart files.
 
 ```bash
 cd my/project/root
@@ -94,13 +94,22 @@ brl -t 4 -r lib/src/ui
 
 # Advanced options
 
-## mulitple directories
+## directories
+
+By default barrel_create only scans libraries that exists
+under the project `lib` directory.
+
+You can pass one or more directories to tell
+barrel_create to only scan specific directories or to scan
+directories outside the project `lib` directory.
+
+Directories MUST be relative to the current project's root directory.
 
 You can pass a list of directories to barrel_create and it will
 process each directory in turn:
 
 ```
-brl pigation2/pig_common/  pigation2/pig_server
+brl tool test lib
 ```
 
 ## recursion
@@ -109,7 +118,7 @@ By passing in the --recursion (-r) flag, barrel create will recursively process
 all sub-directories under each of the passed directories.
 
 ```
-brl -r pigation2/pig_common/  pigation2/pig_server
+brl -r  tool  test
 ```
 
 ## threshold
@@ -124,7 +133,7 @@ file will be created even if only a two dart files exist in the directory (i.e. 
 You can change the threshold by passing the --threshold (-t) flag
 
 ```
-brl -t 10 pigation2/pig_common/  pigation2/pig_server
+brl -t 10 tool test
 ```
 
 ## quiet
@@ -181,8 +190,9 @@ quiet: true
 threshold: 10
 recursive: true
 directories:
-  - /home/bsutton/git/pigation2/pig_common
-  - /home/bsutton/git/pigation2/pig_server
+  - dao
+  - entity
+
 ```
 
 To use the settings file:

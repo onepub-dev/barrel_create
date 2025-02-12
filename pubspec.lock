@@ -138,34 +138,34 @@ packages:
     dependency: "direct main"
     description:
       name: dcli
-      sha256: "881e88bbad0ada4e3a085a0b55e05afa8e4199392c0c45ac18e3dedc37305b9b"
+      sha256: a072e023f273766981def8361e1e60051f60693ff507e05035cdaf6b79330660
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "7.0.0"
   dcli_common:
     dependency: transitive
     description:
       name: dcli_common
-      sha256: f8f77bea6a6d7e4ec2dc24cb4f274fc582938057c2cba44ed0650195ecfcd3ad
+      sha256: "9615d4189bdec029d4fcfa4800844d56b2933f44082d8529388ece7e91f40684"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "7.0.0"
   dcli_core:
     dependency: transitive
     description:
       name: dcli_core
-      sha256: "29fb4833aa950900936646190b30315db511a853273b9fe31d360e5f72c7560b"
+      sha256: "5f4e712570f965e94ac58e306d2fc2a2611cd6b71fa7d96206f5d0ca2257a8b0"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "7.0.0"
   dcli_terminal:
     dependency: transitive
     description:
       name: dcli_terminal
-      sha256: fb50860855c6b2841aed5bcfb315fa83d1401e109691b6585773a24c149dc4b0
+      sha256: "457ccca3d5a0f1a410bdd8815668ce6a2a91519e6467c3c51794303090786d22"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.2"
+    version: "7.0.0"
   equatable:
     dependency: transitive
     description:
@@ -519,7 +519,7 @@ packages:
     source: hosted
     version: "1.4.1"
   strings:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: strings
       sha256: "052836499f03897d3860a603b330c1ea3c8a14177b21f34b15a1295f36024aae"

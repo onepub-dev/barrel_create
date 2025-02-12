@@ -1,0 +1,6 @@
+name: test_artifact
+description: Test project for the barrel_create unit tests.
+version: 1.0.0
+
+environment:
+  sdk: ^3.6.0
