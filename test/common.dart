@@ -28,8 +28,9 @@ Future<void> withinTestArea(void Function(TestArea testArea) action) async {
 }
 
 class TestArea {
-  TestArea(this.pathToCopyOfArtifacts);
   String pathToCopyOfArtifacts;
+
+  TestArea(this.pathToCopyOfArtifacts);
 
   String get pathToProject => join(pathToCopyOfArtifacts, 'test_project');
 

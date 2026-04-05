@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 
 import 'common.dart';
 
-void main() async {
+void main() {
   test('skip non lib directories', () async {
     await withinTestArea((testArea) {
       final pathToExe = absolutePathToExe;

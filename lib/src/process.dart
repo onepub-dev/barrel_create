@@ -8,7 +8,7 @@ import 'package:dcli/dcli.dart';
 import 'package:path/path.dart';
 import 'package:strings/strings.dart';
 
-int barrelsCreated = 0;
+var barrelsCreated = 0;
 
 void processDirectories(
     {required List<String> directories,
