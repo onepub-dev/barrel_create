@@ -1,3 +1,7 @@
+# 1.2.2
+- Keep generated barrel files inside the project's resolved `lib` tree and refuse symlinked output files.
+- Encode source filenames as Dart export URIs so quotes, interpolation markers, and percent signs retain their literal meaning.
+
 # 1.2.1
 - fixed bugs where it was processing non dart directories.
 - fixed a bug where the barrel file was exporting itself.

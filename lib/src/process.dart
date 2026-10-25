@@ -1,5 +1,6 @@
 #! /home/bsutton/.dswitch/active/dart
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
@@ -88,26 +89,27 @@ void _createBarrel(
     required void Function(String line) progress}) {
   final directoryName = basename(directory);
   final barrelFileName = '$directoryName.g.dart';
-  final barrelFilePath = join(directory, barrelFileName);
 
   var relativeDirName = relative(directory, from: projectRoot);
   if (relativeDirName == '.') {
     relativeDirName = projectRoot;
   }
 
-  if (!_isLibDir(directory, projectRoot)) {
+  final safeDirectory = _resolvedLibDir(directory, projectRoot);
+  if (safeDirectory == null) {
     if (!quiet) {
       progress(message(label: 'Excluded', detail: rel(directory, projectRoot)));
     }
     return;
   }
+  final barrelFilePath = join(safeDirectory, barrelFileName);
 
   progress(
       message(label: 'Processing', detail: relativeDirName, color: orange));
 
   // Collect all Dart files except the barrel file itself
   final dartFiles =
-      find('*.dart', recursive: false, workingDirectory: directory).toList()
+      find('*.dart', recursive: false, workingDirectory: safeDirectory).toList()
         ..removeWhere((file) => basename(file) == barrelFileName)
         ..sort();
 
@@ -131,12 +133,19 @@ void _createBarrel(
 
   dartFiles.sort();
 
+  if (FileSystemEntity.typeSync(barrelFilePath, followLinks: false) ==
+      FileSystemEntityType.link) {
+    throw FileSystemException(
+        'Refusing to overwrite a symbolic link', barrelFilePath);
+  }
+
   barrelsCreated++;
 
   // Generate export statements
   final exports = dartFiles.map((file) {
     final fileName = basename(file);
-    return "export '$fileName';";
+    final literal = jsonEncode(Uri.encodeComponent(fileName));
+    return 'export $literal;';
   }).join('\n');
 
   // Write the barrel file
@@ -154,11 +163,24 @@ $exports''');
       color: green));
 }
 
-bool _isLibDir(String subdir, String projectRoot) {
-  final rel = relative(subdir, from: projectRoot);
+String? _resolvedLibDir(String subdir, String projectRoot) {
+  final lexicalRoot = normalize(absolute(projectRoot));
+  final lexicalLib = join(lexicalRoot, 'lib');
+  final lexicalDirectory = normalize(absolute(subdir));
+  if (lexicalDirectory != lexicalLib &&
+      !isWithin(lexicalLib, lexicalDirectory)) {
+    return null;
+  }
 
-  /// We only process files under the lib directory.
-  return rel.startsWith('lib');
+  final realRoot = Directory(projectRoot).resolveSymbolicLinksSync();
+  final realLib =
+      Directory(join(projectRoot, 'lib')).resolveSymbolicLinksSync();
+  final realDirectory = Directory(subdir).resolveSymbolicLinksSync();
+  if ((realLib != realRoot && !isWithin(realRoot, realLib)) ||
+      (realDirectory != realLib && !isWithin(realLib, realDirectory))) {
+    return null;
+  }
+  return realDirectory;
 }
 
 void usage(ArgParser parser) {

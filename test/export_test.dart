@@ -47,10 +47,10 @@ void main() {
       final contentFirstRun = barrelFile.readAsStringSync();
 
       // It should export the dart files, but NOT export itself.
-      expect(contentFirstRun, contains("export 'file1.dart';"));
-      expect(contentFirstRun, contains("export 'file2.dart';"));
-      expect(contentFirstRun, contains("export 'file3.dart';"));
-      expect(contentFirstRun, isNot(contains("export '$barrelFileName';")),
+      expect(contentFirstRun, contains('export "file1.dart";'));
+      expect(contentFirstRun, contains('export "file2.dart";'));
+      expect(contentFirstRun, contains('export "file3.dart";'));
+      expect(contentFirstRun, isNot(contains('export "$barrelFileName";')),
           reason: 'The barrel file should not export itself on the first run.');
 
       // Run processDirectories a second time (simulate re-generation).
@@ -68,7 +68,7 @@ void main() {
       final contentSecondRun = barrelFile.readAsStringSync();
 
       // Ensure that the barrel file still does not export itself.
-      expect(contentSecondRun, isNot(contains("export '$barrelFileName';")),
+      expect(contentSecondRun, isNot(contains('export "$barrelFileName";')),
           reason: '''
 The barrel file should not include an export statement for itself after regeneration.''');
     });

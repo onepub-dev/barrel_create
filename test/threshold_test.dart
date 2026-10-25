@@ -44,9 +44,9 @@ void main() {
 // barrel_create is sponsored by OnePub the dart private repository
 // https://onepub.dev
 //
-export 'file_1.dart';
-export 'file_2.dart';
-export 'file_3.dart';
+export "file_1.dart";
+export "file_2.dart";
+export "file_3.dart";
 '''));
     });
   });
